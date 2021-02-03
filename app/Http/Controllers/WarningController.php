@@ -4,7 +4,57 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Warning;
+use App\Models\Unit;
+
 class WarningController extends Controller
 {
-    //
+    public function getMyWarnings(Request $request) {
+        $array = ['error' => ''];
+
+        // Obrigatorio enviar o número da unidade
+        $property = $request->input('property');
+        if ($property) {
+
+            $user = auth()->user();
+
+            // Verifica se a unidade é do usuário que está acessando
+            $unit = Unit::where('id', $property)
+            ->where('id_owner', $user['id'])
+            ->count();
+
+            if ($unit > 0) {
+                // Pega todos os avisos referente a unidade
+                $warnings = Warning::where('id_unit', $property)
+                ->orderBy('datecreated', 'DESC')
+                ->orderBy('id', 'DESC')
+                ->get();
+
+                // Formata as datas e URL das fotos
+                foreach ($warnings as $warnKey => $warnValue) {
+                    $warnings[$warnKey]['datecreated'] = date('d/m/Y', strtotime($warnValue['datecreated']));
+                    $photoList = [];
+
+                    $photos = explode(',', $warnValue['photos']);
+                    foreach ($photos as $photo) {
+                        if (!empty($photo)) {
+                            $photoList[] = asset('storage/'.$photo);
+                        }
+                    }
+
+                    $warnings[$warnKey]['photos'] = $photoList;
+                }
+
+                $array['list'] = $warnings;
+
+            } else {
+                $array['error'] = 'Está unidade não é sua.';
+            }
+
+        } else {
+            $array['error'] = 'A propriedade é necessária';
+        }
+
+        return $array;
+    }
 }
