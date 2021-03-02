@@ -48,12 +48,12 @@ Route::middleware('auth:api')->group(function() {
 
     // Unidade
     Route::get('/unit/{id}', [UnitController::class, 'getInfo']);
-    Route::get('/unit/{id}/addperson', [UnitController::class, 'addPerson']);
-    Route::get('/unit/{id}/addvehicle', [UnitController::class, 'addVehicle']);
-    Route::get('/unit/{id}/addpet', [UnitController::class, 'addPet']);
-    Route::get('/unit/{id}/removeperson', [UnitController::class, 'removePerson']);
-    Route::get('/unit/{id}/removevehicle', [UnitController::class, 'removeVehicle']);
-    Route::get('/unit/{id}/removepet', [UnitController::class, 'removePet']);
+    Route::post('/unit/{id}/addperson', [UnitController::class, 'addPerson']);
+    Route::post('/unit/{id}/addvehicle', [UnitController::class, 'addVehicle']);
+    Route::post('/unit/{id}/addpet', [UnitController::class, 'addPet']);
+    Route::post('/unit/{id}/removeperson', [UnitController::class, 'removePerson']);
+    Route::post('/unit/{id}/removevehicle', [UnitController::class, 'removeVehicle']);
+    Route::post('/unit/{id}/removepet', [UnitController::class, 'removePet']);
 
     // Reservas
     Route::get('/reservations', [ReservationController::class, 'getReservations']);
